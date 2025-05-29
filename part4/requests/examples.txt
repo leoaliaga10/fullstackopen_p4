@@ -1,0 +1,9 @@
+curl -H 'Content-Type: application/json' \
+      -d '{"title":"La mejor pelicula del mundo 3","author":"Leo Aliaga S","url":"https://blogs3.com","likes":12}' \
+      -X POST \
+      http://localhost:3003/api/blogs
+
+      curl -H 'Content-Type: application/json' \
+      -d '{"username": "leoaliaga","name": "Leoncio Aliaga","password": "salainen"}' \
+      -X POST \
+      http://localhost:3003/api/users
