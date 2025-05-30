@@ -8,9 +8,19 @@ curl -H 'Content-Type: application/json' \
       -X POST \
       http://localhost:3003/api/users
 
-
-
       curl -H 'Content-Type: application/json' \
       -d '{"title":"La mejor pelicula 1","author":"Leoncio","url":"https://blogs39023.com","likes":2,"userId":"6838f17dc4e25568dbf8decc"}' \
       -X POST \
       http://localhost:3003/api/blogs
+
+
+      curl -H 'Content-Type: application/json' \
+      -d '{"username":"leoaliaga","password":"salainen"}' \
+      -X POST \
+      http://localhost:3003/api/login
+
+
+
+curl -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxlb2FsaWFnYSIsImlkIjoiNjgzOGYxN2RjNGUyNTU2OGRiZjhkZWNjIiwiaWF0IjoxNzQ4NTc1OTY5fQ.G8LLE5APxL899mcNu8EO8blGxRb2Cx72ePvI4YeS_KM' -d '{"title":"Esta nota con token ","author":"Joaquin Sabina",url: "https://pagina.com",likes: 1200,"userId":"6838f17dc4e25568dbf8decc"}' -X POST http://localhost:3003/api/blogs
+
+
