@@ -7,3 +7,10 @@ curl -H 'Content-Type: application/json' \
       -d '{"username": "leoaliaga","name": "Leoncio Aliaga","password": "salainen"}' \
       -X POST \
       http://localhost:3003/api/users
+
+
+
+      curl -H 'Content-Type: application/json' \
+      -d '{"title":"La mejor pelicula 1","author":"Leoncio","url":"https://blogs39023.com","likes":2,"userId":"6838f17dc4e25568dbf8decc"}' \
+      -X POST \
+      http://localhost:3003/api/blogs
