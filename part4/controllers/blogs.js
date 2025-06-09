@@ -16,14 +16,14 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
-  //const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  
   console.log("Token: ",request.token)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  const user = await User.findById(decodedToken.id)
-  //const user = await User.findById(body.userId)
+  const user = request.user
+  //const user = await User.findById(decodedToken.id)
   
   if (!user) {
     return response.status(400).json({ error: 'invalid user id' })
@@ -64,9 +64,11 @@ blogsRouter.delete('/:id', async (request, response) => {
   if (!blog) {
     return response.status(404).json({ error: 'blog not found' })
   }
-
+  
+  const user = request.user
+  
   // Verificar que el usuario del token es el mismo que creó el blog
-  if (blog.user.toString() !== decodedToken.id) {
+  if (user.id!== decodedToken.id) {
     return response.status(403).json({ error: 'permission denied: you can only delete your own blogs' })
   }
 
@@ -74,9 +76,9 @@ blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndDelete(request.params.id)
   
   // Opcional: También remover la referencia del blog del array de blogs del usuario
-  const user = await User.findById(decodedToken.id)
-  user.blogs = user.blogs.filter(blogId => blogId.toString() !== request.params.id)
-  await user.save()
+  const user2 = await User.findById(decodedToken.id)
+  user2.blogs = user2.blogs.filter(blogId => blogId.toString() !== request.params.id)
+  await user2.save()
 
   response.status(204).end()
 })
