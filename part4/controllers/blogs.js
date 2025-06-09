@@ -4,7 +4,7 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const middleware = require('../utils/middleware')
 
-//blogsRouter.use(middleware.tokenExtractor)
+blogsRouter.use(middleware.tokenExtractor)
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -45,6 +45,40 @@ blogsRouter.post('/', async (request, response) => {
   const populatedBlog = await Blog.findById(savedBlog._id).populate('user', { username: 1, name: 1 })
 
   response.status(201).json(populatedBlog)
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
+  // Verificar que existe un token
+  if (!request.token) {
+    return response.status(401).json({ error: 'token required' })
+  }
+
+  // Decodificar el token para obtener el usuario
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  // Buscar el blog que se quiere eliminar
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  // Verificar que el usuario del token es el mismo que creó el blog
+  if (blog.user.toString() !== decodedToken.id) {
+    return response.status(403).json({ error: 'permission denied: you can only delete your own blogs' })
+  }
+
+  // Eliminar el blog
+  await Blog.findByIdAndDelete(request.params.id)
+  
+  // Opcional: También remover la referencia del blog del array de blogs del usuario
+  const user = await User.findById(decodedToken.id)
+  user.blogs = user.blogs.filter(blogId => blogId.toString() !== request.params.id)
+  await user.save()
+
+  response.status(204).end()
 })
 
 module.exports = blogsRouter
