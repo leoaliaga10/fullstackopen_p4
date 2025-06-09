@@ -64,7 +64,6 @@ describe('when there is initially one user in db', () => {
 
 })
 
-// Close database connection after all tests
-process.on('exit', () => {
-  mongoose.connection.close()
+after(async () => {
+  await mongoose.connection.close()
 })
